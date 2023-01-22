@@ -56,7 +56,8 @@ import org.slf4j.LoggerFactory;
  * parameters which are applied immediately. For more information view
  * {@link ConfigurationMBean}.</p>
  * 
- * <table border="1" summary="Parameters">
+ * <table border="1">
+ *   <caption>Parameters</caption>
  *   <tr>
  *     <th>Name</th>
  *     <th>Type</th>
