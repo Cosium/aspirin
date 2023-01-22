@@ -4,7 +4,7 @@
 
   <groupId>com.cosium.aspirin</groupId>
   <artifactId>aspirin</artifactId>
-  <version>0.10.03</version>
+  <version>0.11.00-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>Aspirin</name>
   <description>Aspirin is an embeddable send-only SMTP server.</description>
