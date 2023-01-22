@@ -1,23 +1,23 @@
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by FernFlower decompiler)
+//
+
 package org.masukomi.aspirin.core.store.queue;
 
-/**
- * Sending states.
- * 
- * @author Laszlo Solova
- *
- */
 public enum DeliveryState {
-	SENT(0), // Email sent
-	FAILED(1), // Email sending failed
-	QUEUED(2), // Email is queued
-	IN_PROGRESS(3) // Email is currently in processing
-	;
+	SENT(0),
+	FAILED(1),
+	QUEUED(2),
+	IN_PROGRESS(3);
+
 	private int stateId = 0;
+
 	private DeliveryState(int stateId) {
 		this.stateId = stateId;
 	}
-	public int getStateId() {
-		return stateId;
-	}
 
+	public int getStateId() {
+		return this.stateId;
+	}
 }

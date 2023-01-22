@@ -1,3 +1,8 @@
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by FernFlower decompiler)
+//
+
 package org.masukomi.aspirin.core.store.queue;
 
 import java.util.ArrayList;
@@ -10,199 +15,196 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
-
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.InternetAddress;
+import org.masukomi.aspirin.core.config.Configuration;
+import org.masukomi.aspirin.core.listener.ListenerManager;
 
-import org.masukomi.aspirin.core.AspirinInternal;
-
-
-/**
- * 
- * @author Laszlo Solova
- *
- */
 public class SimpleQueueStore implements QueueStore {
-	
-	private List<QueueInfo> queueInfoList = new LinkedList<QueueInfo>();
-	private Map<String, QueueInfo> queueInfoByMailidAndRecipient = new HashMap<String, QueueInfo>();
-	private Map<String, List<QueueInfo>> queueInfoByMailid = new HashMap<String, List<QueueInfo>>();
-	private Map<String, List<QueueInfo>> queueInfoByRecipient = new HashMap<String, List<QueueInfo>>();
+	private final Configuration configuration;
+	private final ListenerManager listenerManager;
+	private List<QueueInfo> queueInfoList = new LinkedList();
+	private Map<String, QueueInfo> queueInfoByMailidAndRecipient = new HashMap();
+	private Map<String, List<QueueInfo>> queueInfoByMailid = new HashMap();
+	private Map<String, List<QueueInfo>> queueInfoByRecipient = new HashMap();
 	private Object lock = new Object();
 	private Comparator<QueueInfo> queueInfoComparator = new Comparator<QueueInfo>() {
-		@Override
 		public int compare(QueueInfo o1, QueueInfo o2) {
-			return (int)(o2.getAttempt()-o1.getAttempt());
+			return (int)(o2.getAttempt() - o1.getAttempt());
 		}
 	};
-	
-	@Override
+
+	public SimpleQueueStore(Configuration configuration, ListenerManager listenerManager) {
+		this.configuration = configuration;
+		this.listenerManager = listenerManager;
+	}
+
 	public void add(String mailid, long expiry, Collection<InternetAddress> recipients) throws MessagingException {
 		try {
-			for( InternetAddress recipient : recipients )
-			{
-				QueueInfo queueInfo = new QueueInfo();
+			Iterator var5 = recipients.iterator();
+
+			while(var5.hasNext()) {
+				InternetAddress recipient = (InternetAddress)var5.next();
+				QueueInfo queueInfo = new QueueInfo(this.configuration, this.listenerManager);
 				queueInfo.setExpiry(expiry);
 				queueInfo.setMailid(mailid);
 				queueInfo.setRecipient(recipient.getAddress());
-				synchronized (lock) {
-					
-					queueInfoList.add(queueInfo);
-					
-					queueInfoByMailidAndRecipient.put(createSearchKey(queueInfo.getMailid(),queueInfo.getRecipient()), queueInfo);
-					
-					if( !queueInfoByMailid.containsKey(queueInfo.getMailid()) )
-						queueInfoByMailid.put(queueInfo.getMailid(), new ArrayList<QueueInfo>());
-					queueInfoByMailid.get(queueInfo.getMailid()).add(queueInfo);
-					
-					if( !queueInfoByRecipient.containsKey(queueInfo.getRecipient()) )
-						queueInfoByRecipient.put(queueInfo.getRecipient(), new ArrayList<QueueInfo>());
-					queueInfoByRecipient.get(queueInfo.getRecipient()).add(queueInfo);
-					
+				synchronized(this.lock) {
+					this.queueInfoList.add(queueInfo);
+					this.queueInfoByMailidAndRecipient.put(this.createSearchKey(queueInfo.getMailid(), queueInfo.getRecipient()), queueInfo);
+					if (!this.queueInfoByMailid.containsKey(queueInfo.getMailid())) {
+						this.queueInfoByMailid.put(queueInfo.getMailid(), new ArrayList());
+					}
+
+					((List)this.queueInfoByMailid.get(queueInfo.getMailid())).add(queueInfo);
+					if (!this.queueInfoByRecipient.containsKey(queueInfo.getRecipient())) {
+						this.queueInfoByRecipient.put(queueInfo.getRecipient(), new ArrayList());
+					}
+
+					((List)this.queueInfoByRecipient.get(queueInfo.getRecipient())).add(queueInfo);
 				}
 			}
-		} catch (Exception e) {
-			throw new MessagingException("Message queueing failed: "+mailid, e);
+
+		} catch (Exception var11) {
+			throw new MessagingException("Message queueing failed: " + mailid, var11);
 		}
 	}
-	
-	@Override
+
 	public List<String> clean() {
 		List<String> mailidList = null;
-		synchronized (lock) {
-			mailidList = new ArrayList<String>(queueInfoByMailid.keySet());
+		synchronized(this.lock) {
+			mailidList = new ArrayList(this.queueInfoByMailid.keySet());
 		}
+
 		Iterator<String> mailidIt = mailidList.iterator();
-		while( mailidIt.hasNext() )
-		{
-			String mailid = mailidIt.next();
-			if( isCompleted(mailid) )
-			{
-				remove(mailid);
+
+		while(mailidIt.hasNext()) {
+			String mailid = (String)mailidIt.next();
+			if (this.isCompleted(mailid)) {
+				this.remove(mailid);
 				mailidIt.remove();
 			}
 		}
+
 		return mailidList;
 	}
-	
-	@Override
+
 	public QueueInfo createQueueInfo() {
-		return new QueueInfo();
-	}
-	
-	@Override
-	public long getNextAttempt(String mailid, String recipient) {
-		QueueInfo qInfo = queueInfoByMailidAndRecipient.get(createSearchKey(mailid, recipient));
-		if( qInfo != null && qInfo.hasState(DeliveryState.QUEUED) )
-			return qInfo.getAttempt();
-		return -1;
+		return new QueueInfo(this.configuration, this.listenerManager);
 	}
 
-	@Override
+	public long getNextAttempt(String mailid, String recipient) {
+		QueueInfo qInfo = (QueueInfo)this.queueInfoByMailidAndRecipient.get(this.createSearchKey(mailid, recipient));
+		return qInfo != null && qInfo.hasState(new DeliveryState[]{DeliveryState.QUEUED}) ? qInfo.getAttempt() : -1L;
+	}
+
 	public boolean hasBeenRecipientHandled(String mailid, String recipient) {
-		QueueInfo qInfo = queueInfoByMailidAndRecipient.get(createSearchKey(mailid, recipient));
-		return ( qInfo != null && qInfo.hasState(DeliveryState.FAILED, DeliveryState.SENT) );
+		QueueInfo qInfo = (QueueInfo)this.queueInfoByMailidAndRecipient.get(this.createSearchKey(mailid, recipient));
+		return qInfo != null && qInfo.hasState(new DeliveryState[]{DeliveryState.FAILED, DeliveryState.SENT});
 	}
-	
-	@Override
+
 	public void init() {
-		// Do nothing	
 	}
-	
-	@Override
+
 	public boolean isCompleted(String mailid) {
-		List<QueueInfo> qibmList = queueInfoByMailid.get(mailid);
-		if( qibmList != null )
-		{
-			for( QueueInfo sqi : qibmList )
-			{
-				if( sqi.hasState(DeliveryState.IN_PROGRESS, DeliveryState.QUEUED) )
+		List<QueueInfo> qibmList = (List)this.queueInfoByMailid.get(mailid);
+		if (qibmList != null) {
+			Iterator var3 = qibmList.iterator();
+
+			while(var3.hasNext()) {
+				QueueInfo sqi = (QueueInfo)var3.next();
+				if (sqi.hasState(new DeliveryState[]{DeliveryState.IN_PROGRESS, DeliveryState.QUEUED})) {
 					return false;
+				}
 			}
 		}
+
 		return true;
 	}
-	
-	@Override
+
 	public QueueInfo next() {
-		Collections.sort(queueInfoList, queueInfoComparator);
-		if( !queueInfoList.isEmpty() )
-		{
-			synchronized (lock) {
-				ListIterator<QueueInfo> queueInfoIt = queueInfoList.listIterator();
-				while( queueInfoIt.hasNext() )
-				{
-					QueueInfo qi = queueInfoIt.next();
-					if( qi.isSendable() ) {
-						if( !qi.isInTimeBounds() )
-						{
-							if( qi.getResultInfo() == null || qi.getResultInfo().isEmpty() )
-								qi.setResultInfo("Delivery is out of time or attempt.");
-							qi.setState(DeliveryState.FAILED);
-							setSendingResult(qi);
+		Collections.sort(this.queueInfoList, this.queueInfoComparator);
+		if (!this.queueInfoList.isEmpty()) {
+			synchronized(this.lock) {
+				ListIterator<QueueInfo> queueInfoIt = this.queueInfoList.listIterator();
+
+				while(true) {
+					QueueInfo qi;
+					do {
+						if (!queueInfoIt.hasNext()) {
+							return null;
 						}
-						else
-						{	
-							qi.setState(DeliveryState.IN_PROGRESS);
-							return qi;
-						}
+
+						qi = (QueueInfo)queueInfoIt.next();
+					} while(!qi.isSendable());
+
+					if (qi.isInTimeBounds()) {
+						qi.setState(DeliveryState.IN_PROGRESS);
+						return qi;
 					}
+
+					if (qi.getResultInfo() == null || qi.getResultInfo().isEmpty()) {
+						qi.setResultInfo("Delivery is out of time or attempt.");
+					}
+
+					qi.setState(DeliveryState.FAILED);
+					this.setSendingResult(qi);
 				}
 			}
+		} else {
+			return null;
 		}
-		return null;
 	}
-	
-	@Override
+
 	public void remove(String mailid) {
-		synchronized (lock) {
-			List<QueueInfo> removeableQueueInfos = queueInfoByMailid.remove(mailid);
-			if( removeableQueueInfos != null )
-			{
-				for( QueueInfo sqi : removeableQueueInfos )
-				{
-					queueInfoByMailidAndRecipient.remove(createSearchKey(sqi.getMailid(), sqi.getRecipient()));
-					queueInfoByRecipient.get(sqi.getRecipient()).remove(sqi);
+		synchronized(this.lock) {
+			List<QueueInfo> removeableQueueInfos = (List)this.queueInfoByMailid.remove(mailid);
+			if (removeableQueueInfos != null) {
+				Iterator var4 = removeableQueueInfos.iterator();
+
+				while(var4.hasNext()) {
+					QueueInfo sqi = (QueueInfo)var4.next();
+					this.queueInfoByMailidAndRecipient.remove(this.createSearchKey(sqi.getMailid(), sqi.getRecipient()));
+					((List)this.queueInfoByRecipient.get(sqi.getRecipient())).remove(sqi);
 				}
 			}
+
 		}
 	}
 
-	@Override
 	public void removeRecipient(String recipient) {
-		synchronized (lock) {
-			List<QueueInfo> removeableQueueInfos = queueInfoByRecipient.remove(recipient);
-			if( removeableQueueInfos != null )
-			{
-				for( QueueInfo sqi : removeableQueueInfos )
-				{
-					queueInfoByMailidAndRecipient.remove(createSearchKey(sqi.getMailid(), sqi.getRecipient()));
-					queueInfoByMailid.get(sqi.getMailid()).remove(sqi);
+		synchronized(this.lock) {
+			List<QueueInfo> removeableQueueInfos = (List)this.queueInfoByRecipient.remove(recipient);
+			if (removeableQueueInfos != null) {
+				Iterator var4 = removeableQueueInfos.iterator();
+
+				while(var4.hasNext()) {
+					QueueInfo sqi = (QueueInfo)var4.next();
+					this.queueInfoByMailidAndRecipient.remove(this.createSearchKey(sqi.getMailid(), sqi.getRecipient()));
+					((List)this.queueInfoByMailid.get(sqi.getMailid())).remove(sqi);
 				}
 			}
+
 		}
 	}
 
-	@Override
 	public void setSendingResult(QueueInfo qi) {
-		synchronized (lock) {
-			QueueInfo uniqueQueueInfo = queueInfoByMailidAndRecipient.get(createSearchKey(qi.getMailid(), qi.getRecipient()));
-			if( uniqueQueueInfo != null )
-			{
-				uniqueQueueInfo.setAttempt(System.currentTimeMillis()+AspirinInternal.getConfiguration().getDeliveryAttemptDelay());
+		synchronized(this.lock) {
+			QueueInfo uniqueQueueInfo = (QueueInfo)this.queueInfoByMailidAndRecipient.get(this.createSearchKey(qi.getMailid(), qi.getRecipient()));
+			if (uniqueQueueInfo != null) {
+				uniqueQueueInfo.setAttempt(System.currentTimeMillis() + (long)this.configuration.getDeliveryAttemptDelay());
 				uniqueQueueInfo.incAttemptCount();
 				uniqueQueueInfo.setState(qi.getState());
 			}
+
 		}
 	}
-	
-	@Override
+
 	public int size() {
-		return queueInfoByMailid.size();
-	}
-	
-	private String createSearchKey(String mailid, String recipient) {
-		return mailid+"-"+recipient;
+		return this.queueInfoByMailid.size();
 	}
 
+	private String createSearchKey(String mailid, String recipient) {
+		return mailid + "-" + recipient;
+	}
 }

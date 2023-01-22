@@ -1,50 +1,37 @@
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by FernFlower decompiler)
+//
+
 package org.masukomi.aspirin.core.store.mail;
 
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-
 import jakarta.mail.internet.MimeMessage;
 
-
-
-/**
- * This store implementation has a simple hashmap to 
- * store all MimeMessage objects. Please, be careful: 
- * if you has a lot of objects in memory it could cause 
- * OutOfMemoryError.
- * 
- * @author Laszlo Solova
- *
- */
 public class SimpleMailStore implements MailStore {
-	
-	private HashMap<String, MimeMessage> messageMap = new HashMap<String, MimeMessage>();
-	
+	private HashMap<String, MimeMessage> messageMap = new HashMap();
 
-	@Override
+	public SimpleMailStore() {
+	}
+
 	public MimeMessage get(String mailid) {
-		return messageMap.get(mailid);
+		return (MimeMessage)this.messageMap.get(mailid);
 	}
-	
-	@Override
+
 	public List<String> getMailIds() {
-		return new ArrayList<String>(messageMap.keySet());
+		return new ArrayList(this.messageMap.keySet());
 	}
-	
-	@Override
+
 	public void init() {
-		// Do nothing	
 	}
 
-	@Override
 	public void remove(String mailid) {
-		messageMap.remove(mailid);
+		this.messageMap.remove(mailid);
 	}
 
-	@Override
 	public void set(String mailid, MimeMessage msg) {
-		messageMap.put(mailid, msg);
+		this.messageMap.put(mailid, msg);
 	}
-
 }

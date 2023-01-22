@@ -1,19 +1,18 @@
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by FernFlower decompiler)
+//
+
 package org.masukomi.aspirin.core.delivery;
 
 import jakarta.mail.MessagingException;
 
-/**
- * 
- * @author Laszlo Solova
- *
- */
 public class DeliveryException extends MessagingException {
 	private static final long serialVersionUID = -5388667812025531029L;
-	
 	private boolean permanent = true;
-	
+
 	public boolean isPermanent() {
-		return permanent;
+		return this.permanent;
 	}
 
 	public DeliveryException() {
@@ -28,5 +27,4 @@ public class DeliveryException extends MessagingException {
 		super(s, e);
 		this.permanent = permanent;
 	}
-
 }

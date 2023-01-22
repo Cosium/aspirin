@@ -1,22 +1,21 @@
+//
+// Source code recreated from a .class file by IntelliJ IDEA
+// (powered by FernFlower decompiler)
+//
+
 package org.masukomi.aspirin.core.store.mail;
 
 import java.util.List;
-
 import jakarta.mail.internet.MimeMessage;
 
-/**
- * This store contain all MimeMessage instances. This is useful, 
- * when we try to reduce memory usage, because we can store all 
- * MimeMessage objects in files or in RDBMS or in other places, 
- * instead of memory.
- * 
- * @author Laszlo Solova
- *
- */
 public interface MailStore {
-	public MimeMessage get(String mailid);
-	public List<String> getMailIds();
-	public void init();
-	public void remove(String mailid);
-	public void set(String mailid, MimeMessage msg);
+	MimeMessage get(String var1);
+
+	List<String> getMailIds();
+
+	void init();
+
+	void remove(String var1);
+
+	void set(String var1, MimeMessage var2);
 }
