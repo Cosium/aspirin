@@ -3,7 +3,7 @@
 
   <groupId>com.cosium.aspirin</groupId>
   <artifactId>aspirin</artifactId>
-  <version>0.12.01</version>
+  <version>0.12.02-SNAPSHOT</version>
   <packaging>jar</packaging>
   <name>Aspirin</name>
   <description>Aspirin is an embeddable send-only SMTP server.</description>
@@ -81,7 +81,7 @@
     <connection>scm:git:https://github.com/Cosium/aspirin</connection>
     <developerConnection>scm:git:https://github.com/Cosium/aspirin</developerConnection>
     <url>https://github.com/Cosium/aspirin</url>
-    <tag>0.12.01</tag>
+    <tag>HEAD</tag>
   </scm>
   <build>
     <plugins>
