@@ -1,7 +1,6 @@
 package org.masukomi.aspirin.core.config;
 
-import javax.mail.Transport;
-
+import jakarta.mail.Transport;
 import org.masukomi.aspirin.core.store.mail.FileMailStore;
 import org.masukomi.aspirin.core.store.mail.SimpleMailStore;
 

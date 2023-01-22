@@ -5,7 +5,7 @@ import java.util.Collection;
 import java.util.Comparator;
 import java.util.Vector;
 
-import javax.mail.URLName;
+import jakarta.mail.URLName;
 
 import org.masukomi.aspirin.core.AspirinInternal;
 import org.xbill.DNS.Lookup;

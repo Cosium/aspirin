@@ -23,19 +23,17 @@
   <url>https://github.com/Cosium/aspirin</url>
 
   <properties>
-    <javax.activation.version>1.1.1</javax.activation.version>
     <commons.pool.version>1.5.5</commons.pool.version>
     <dnsjava.version>2.0.8</dnsjava.version>
-    <javax.mail.version>1.4.2</javax.mail.version>
   </properties>
 
   <dependencies>
 
     <!-- 3rd party -->
     <dependency>
-      <groupId>javax.activation</groupId>
-      <artifactId>activation</artifactId>
-      <version>${javax.activation.version}</version>
+      <groupId>com.sun.activation</groupId>
+      <artifactId>jakarta.activation</artifactId>
+      <version>2.0.1</version>
     </dependency>
     <dependency>
       <groupId>commons-pool</groupId>
@@ -48,9 +46,9 @@
       <version>${dnsjava.version}</version>
     </dependency>
     <dependency>
-      <groupId>javax.mail</groupId>
-      <artifactId>mail</artifactId>
-      <version>${javax.mail.version}</version>
+      <groupId>com.sun.mail</groupId>
+      <artifactId>jakarta.mail</artifactId>
+      <version>2.0.1</version>
     </dependency>
     <dependency>
       <groupId>org.slf4j</groupId>
@@ -68,7 +66,7 @@
     <dependency>
       <groupId>org.jvnet.mock-javamail</groupId>
       <artifactId>mock-javamail</artifactId>
-      <version>1.7</version>
+      <version>2.0</version>
       <scope>test</scope>
       <exclusions>
         <exclusion>

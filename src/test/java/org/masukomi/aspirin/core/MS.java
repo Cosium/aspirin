@@ -9,9 +9,9 @@
  */
 package org.masukomi.aspirin.core;
 
-import javax.mail.Message;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.MimeMessage;
+import jakarta.mail.Message;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.MimeMessage;
 
 import org.masukomi.aspirin.Aspirin;
 

@@ -2,7 +2,7 @@ package org.masukomi.aspirin.core.dns;
 
 import java.util.Collection;
 
-import javax.mail.URLName;
+import jakarta.mail.URLName;
 
 import junit.framework.Assert;
 

@@ -3,8 +3,8 @@ package org.masukomi.aspirin.core.delivery;
 import java.util.HashMap;
 import java.util.Map;
 
-import javax.mail.Session;
-import javax.mail.internet.MimeMessage;
+import jakarta.mail.Session;
+import jakarta.mail.internet.MimeMessage;
 
 import org.masukomi.aspirin.core.store.queue.QueueInfo;
 

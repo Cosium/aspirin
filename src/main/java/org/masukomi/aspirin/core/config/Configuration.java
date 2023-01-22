@@ -28,10 +28,10 @@ import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
-import javax.mail.Session;
-import javax.mail.Transport;
-import javax.mail.internet.InternetAddress;
-import javax.mail.internet.ParseException;
+import jakarta.mail.Session;
+import jakarta.mail.Transport;
+import jakarta.mail.internet.InternetAddress;
+import jakarta.mail.internet.ParseException;
 
 import org.masukomi.aspirin.core.AspirinInternal;
 import org.masukomi.aspirin.core.store.mail.MailStore;

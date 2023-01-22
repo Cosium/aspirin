@@ -11,8 +11,8 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.InternetAddress;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.InternetAddress;
 
 import org.masukomi.aspirin.core.AspirinInternal;
 

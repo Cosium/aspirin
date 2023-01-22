@@ -1,7 +1,7 @@
 package org.masukomi.aspirin.core.delivery;
 
-import javax.mail.MessagingException;
-import javax.mail.Session;
+import jakarta.mail.MessagingException;
+import jakarta.mail.Session;
 
 import org.apache.commons.pool.ObjectPool;
 import org.masukomi.aspirin.core.AspirinInternal;

@@ -1,6 +1,6 @@
 package org.masukomi.aspirin.core.delivery;
 
-import javax.mail.MessagingException;
+import jakarta.mail.MessagingException;
 
 /**
  * 

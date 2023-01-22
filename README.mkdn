@@ -16,7 +16,7 @@ Aspirin can be found on GitHub at [http://github.com/masukomi/aspirin](http://gi
 
 ## How do I use it? ##
 
-Using Asprin is pretty simple. All you have to do is generate a standard javax.mail.internet.MimeMessage and then add it to an instance of MailQue via 
+Using Asprin is pretty simple. All you have to do is generate a standard jakarta.mail.internet.MimeMessage and then add it to an instance of MailQue via
 
 	myMailQue.queMail(MimeMessage message)
 

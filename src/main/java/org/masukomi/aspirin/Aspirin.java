@@ -2,8 +2,8 @@ package org.masukomi.aspirin;
 
 import java.util.Date;
 
-import javax.mail.MessagingException;
-import javax.mail.internet.MimeMessage;
+import jakarta.mail.MessagingException;
+import jakarta.mail.internet.MimeMessage;
 
 import org.masukomi.aspirin.core.AspirinInternal;
 import org.masukomi.aspirin.core.config.Configuration;

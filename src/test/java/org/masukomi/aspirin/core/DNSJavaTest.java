@@ -7,7 +7,7 @@ package org.masukomi.aspirin.core;
 
 import java.util.Collection;
 
-import javax.mail.URLName;
+import jakarta.mail.URLName;
 
 import org.junit.Assert;
 import org.junit.Test;

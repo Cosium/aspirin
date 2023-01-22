@@ -2,7 +2,7 @@ package org.masukomi.aspirin.core.dns;
 
 import java.util.Collection;
 
-import javax.mail.URLName;
+import jakarta.mail.URLName;
 
 import org.masukomi.aspirin.core.AspirinInternal;
 import org.masukomi.aspirin.core.delivery.DeliveryContext;
